@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider_test/fish_model.dart';
+import 'package:provider_test/seafish_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,8 +12,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider(
-      create: (context) => FishModel(name: 'Salmon', number: 10, size: 'big'),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) =>
+              FishModel(name: 'Salmon', number: 10, size: 'big'),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              SeaFishModel(name: 'Tuna', tunanumber: 0, size: 'middle'),
+        ),
+      ],
       child: MaterialApp(
         home: FishOrder(),
       ),
@@ -93,7 +103,6 @@ class SpicyA extends StatelessWidget {
   }
 }
 
-
 class middle extends StatelessWidget {
   const middle({Key? key}) : super(key: key);
 
@@ -112,8 +121,6 @@ class middle extends StatelessWidget {
   }
 }
 
-
-
 class SpicyB extends StatelessWidget {
   const SpicyB({Key? key}) : super(key: key);
 
@@ -122,7 +129,7 @@ class SpicyB extends StatelessWidget {
     return Column(
       children: [
         Text(
-          'number : ${Provider.of<FishModel>(context).number}',
+          'Tunanumber : ${Provider.of<SeaFishModel>(context, listen: false).tunanumber}',
           style: TextStyle(
             fontSize: 16,
             color: Colors.redAccent,
@@ -138,12 +145,17 @@ class SpicyB extends StatelessWidget {
           ),
         ),
         SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            Provider.of<SeaFishModel>(context, listen: false).changeSeaFishNumber();
+          },
+          child: Text('Sea fish number'),
+        ),
         Low(),
       ],
     );
   }
 }
-
 
 class Low extends StatelessWidget {
   const Low({Key? key}) : super(key: key);
@@ -158,15 +170,12 @@ class Low extends StatelessWidget {
             fontSize: 16,
           ),
         ),
-
         SizedBox(height: 20),
         SpicyC(),
       ],
     );
   }
 }
-
-
 
 class SpicyC extends StatelessWidget {
   const SpicyC({Key? key}) : super(key: key);
@@ -192,8 +201,13 @@ class SpicyC extends StatelessWidget {
           ),
         ),
         SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            Provider.of<FishModel>(context, listen: false).changeFishNumber();
+          },
+          child: Text('ChangeFish number'),
+        ),
       ],
     );
   }
 }
-
